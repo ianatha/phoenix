@@ -120,6 +120,13 @@ defmodule Phoenix.Endpoint.Cowboy2Handler do
     handle_reply(handler, handler.handle_in({payload, opcode: opcode}, state))
   end
 
+  def websocket_handle(opcode, [handler | state] = handler_state) when opcode in [:ping] do
+    case function_exported?(handler, :handle_ping, 1) do
+      true -> handle_reply(handler, handler.handle_ping(state))
+      false -> {:ok, handler_state}
+    end
+  end
+
   def websocket_handle(_other, handler_state) do
     {:ok, handler_state}
   end

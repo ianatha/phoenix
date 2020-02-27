@@ -205,6 +205,16 @@ defmodule Phoenix.Socket.Transport do
   """
   @callback terminate(reason :: term, state) :: :ok
 
+  @doc """
+  nodoc
+  """
+  @callback handle_ping(state) ::
+              {:ok, state}
+              | {:push, {opcode :: atom, message :: term}, state}
+              | {:stop, reason :: term, state}
+
+  @optional_callbacks handle_ping: 1
+
   require Logger
 
   @doc false
